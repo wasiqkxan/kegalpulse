@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kegel Pulse — Pelvic Floor Trainer for Android</title>
+<meta name="description" content="Kegel Pulse is a free, guided pelvic floor trainer for women and men. A 30-day program, five minutes a day. No subscriptions, no account — your practice data stays on your device.">
+<link rel="icon" href="assets/app_icon_512.png">
+
+<!-- Open Graph / social preview -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Kegel Pulse — Pelvic Floor Trainer">
+<meta property="og:description" content="Train your pelvic floor in 5 minutes a day. Free, private, guided workouts.">
+<meta property="og:image" content="assets/feature_graphic.png">
+<meta name="twitter:card" content="summary_large_image">
+
+<style>
+  :root {
+    color-scheme: light dark;
+    --teal: #00B8A9;
+    --teal-deep: #00887D;
+    --accent: #FFCB77;
+    --bg: #F8FAFC;
+    --surface: #FFFFFF;
+    --text: #1F2937;
+    --muted: #6B7280;
+    --line: rgba(31, 41, 55, 0.10);
+    --shadow: 0 1px 2px rgba(16,24,40,.05), 0 12px 32px -12px rgba(16,24,40,.18);
+    --radius: 16px;
+    --maxw: 1080px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0B1211;
+      --surface: #131C1B;
+      --text: #E8EDEC;
+      --muted: #9BA8A6;
+      --line: rgba(255, 255, 255, 0.10);
+      --shadow: 0 12px 32px -12px rgba(0,0,0,.6);
+    }
+  }
+  :root[data-theme="light"] {
+    --bg: #F8FAFC; --surface: #FFFFFF; --text: #1F2937; --muted: #6B7280;
+    --line: rgba(31,41,55,.10);
+    --shadow: 0 1px 2px rgba(16,24,40,.05), 0 12px 32px -12px rgba(16,24,40,.18);
+  }
+  :root[data-theme="dark"] {
+    --bg: #0B1211; --surface: #131C1B; --text: #E8EDEC; --muted: #9BA8A6;
+    --line: rgba(255,255,255,.10);
+    --shadow: 0 12px 32px -12px rgba(0,0,0,.6);
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 20px; }
+  a { color: var(--teal-deep); }
+  @media (prefers-color-scheme: dark) { a { color: var(--teal); } }
+  :root[data-theme="dark"] a { color: var(--teal); }
+  :root[data-theme="light"] a { color: var(--teal-deep); }
+  h1, h2, h3 { line-height: 1.2; letter-spacing: -0.02em; margin: 0 0 12px; }
+
+  /* ---------- header ---------- */
+  header {
+    position: sticky; top: 0; z-index: 20;
+    backdrop-filter: saturate(180%) blur(12px);
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav { display: flex; align-items: center; gap: 12px; height: 64px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; text-decoration: none; color: var(--text); }
+  .brand img { width: 32px; height: 32px; border-radius: 8px; }
+  .nav-links { margin-left: auto; display: flex; gap: 22px; align-items: center; }
+  .nav-links a { color: var(--muted); text-decoration: none; font-size: .95rem; font-weight: 500; }
+  .nav-links a:hover { color: var(--text); }
+  @media (max-width: 640px) { .nav-links a.hide-sm { display: none; } }
+
+  /* ---------- hero ---------- */
+  .hero { position: relative; padding: 72px 0 56px; overflow: hidden; }
+  .hero::before {
+    content: ""; position: absolute; inset: -40% 0 auto 50%;
+    width: 900px; height: 900px; transform: translateX(-50%);
+    background: radial-gradient(circle, rgba(0,184,169,.20), rgba(0,184,169,0) 62%);
+    pointer-events: none;
+  }
+  .hero .wrap { position: relative; }
+  .hero-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 48px; align-items: center; }
+  @media (max-width: 860px) { .hero-grid { grid-template-columns: 1fr; gap: 36px; text-align: center; } }
+
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: .8rem; font-weight: 650; letter-spacing: .04em; text-transform: uppercase;
+    color: var(--teal-deep); background: rgba(0,184,169,.12);
+    border: 1px solid rgba(0,184,169,.28);
+    padding: 6px 12px; border-radius: 999px; margin-bottom: 18px;
+  }
+  @media (prefers-color-scheme: dark) { .eyebrow { color: var(--teal); } }
+  :root[data-theme="dark"] .eyebrow { color: var(--teal); }
+  :root[data-theme="light"] .eyebrow { color: var(--teal-deep); }
+
+  .hero h1 { font-size: clamp(2.1rem, 5.4vw, 3.4rem); font-weight: 800; }
+  .hero h1 .grad {
+    background: linear-gradient(100deg, var(--teal), #4FD8CB);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .lede { font-size: 1.12rem; color: var(--muted); max-width: 46ch; margin: 0 0 28px; }
+  @media (max-width: 860px) { .lede { margin-left: auto; margin-right: auto; } }
+
+  .cta-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  @media (max-width: 860px) { .cta-row { justify-content: center; } }
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 13px 22px; border-radius: 12px; font-weight: 650; font-size: 1rem;
+    text-decoration: none; border: 1px solid transparent; transition: transform .12s ease, box-shadow .12s ease;
+  }
+  .btn:hover { transform: translateY(-1px); }
+  .btn-primary { background: var(--teal); color: #04201E; box-shadow: 0 8px 22px -10px rgba(0,184,169,.9); }
+  .btn-ghost { background: var(--surface); color: var(--text); border-color: var(--line); box-shadow: var(--shadow); }
+  .cta-note { font-size: .85rem; color: var(--muted); margin: 14px 0 0; }
+  @media (max-width: 860px) { .cta-note { text-align: center; } }
+
+  .trust { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-top: 26px; font-size: .9rem; color: var(--muted); }
+  @media (max-width: 860px) { .trust { justify-content: center; } }
+  .trust span { display: inline-flex; align-items: center; gap: 7px; }
+  .tick { color: var(--teal); font-weight: 800; }
+
+  .hero-shot { justify-self: center; max-width: 320px; width: 100%; }
+  .hero-shot img {
+    width: 100%; height: auto; display: block;
+    border-radius: 20px; box-shadow: var(--shadow); border: 1px solid var(--line);
+  }
+
+  /* ---------- sections ---------- */
+  section { padding: 64px 0; }
+  .section-head { max-width: 62ch; margin: 0 auto 40px; text-align: center; }
+  .section-head h2 { font-size: clamp(1.6rem, 3.4vw, 2.2rem); font-weight: 750; }
+  .section-head p { color: var(--muted); margin: 0; }
+
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; }
+  .card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 24px; box-shadow: var(--shadow);
+  }
+  .card h3 { font-size: 1.06rem; font-weight: 700; }
+  .card p { margin: 0; color: var(--muted); font-size: .96rem; }
+  .icon {
+    width: 40px; height: 40px; border-radius: 11px; display: grid; place-items: center;
+    background: rgba(0,184,169,.14); color: var(--teal-deep); margin-bottom: 14px;
+  }
+  @media (prefers-color-scheme: dark) { .icon { color: var(--teal); } }
+  :root[data-theme="dark"] .icon { color: var(--teal); }
+  :root[data-theme="light"] .icon { color: var(--teal-deep); }
+  .icon svg { width: 21px; height: 21px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* ---------- gallery ---------- */
+  .gallery-scroll { overflow-x: auto; padding: 4px 20px 20px; -webkit-overflow-scrolling: touch; scrollbar-width: thin; }
+  .gallery { display: flex; gap: 16px; width: max-content; margin: 0 auto; }
+  .gallery img {
+    width: 248px; height: auto; display: block; border-radius: 16px;
+    border: 1px solid var(--line); box-shadow: var(--shadow);
+  }
+
+  /* ---------- privacy band ---------- */
+  .band {
+    background: var(--surface); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  }
+  .band .wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
+  @media (max-width: 860px) { .band .wrap { grid-template-columns: 1fr; gap: 24px; } }
+  .band h2 { font-size: clamp(1.5rem, 3.2vw, 2rem); }
+  .band ul { margin: 0; padding-left: 20px; color: var(--muted); }
+  .band li { margin-bottom: 10px; }
+
+  /* ---------- final cta ---------- */
+  .final { text-align: center; }
+  .final h2 { font-size: clamp(1.7rem, 3.6vw, 2.3rem); }
+  .final p { color: var(--muted); max-width: 50ch; margin: 0 auto 26px; }
+
+  /* ---------- footer ---------- */
+  footer { border-top: 1px solid var(--line); padding: 36px 0 56px; font-size: .9rem; color: var(--muted); }
+  .foot-row { display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: center; }
+  .foot-row nav { margin-left: auto; display: flex; flex-wrap: wrap; gap: 20px; }
+  @media (max-width: 640px) { .foot-row nav { margin-left: 0; } }
+  .disclaimer {
+    margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--line);
+    font-size: .82rem; color: var(--muted); max-width: 78ch;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="#top">
+      <img src="assets/app_icon_512.png" alt="">
+      Kegel Pulse
+    </a>
+    <div class="nav-links">
+      <a href="#features" class="hide-sm">Features</a>
+      <a href="#screens" class="hide-sm">Screens</a>
+      <a href="#privacy">Privacy</a>
+      <a href="store/privacy-policy.html">Policy</a>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ============ HERO ============ -->
+  <div class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="eyebrow">Free · Android</span>
+        <h1>Strengthen your pelvic floor in <span class="grad">5 minutes a day</span></h1>
+        <p class="lede">
+          A simple, guided pelvic floor trainer for women and men. Follow a clear
+          30-day program with on-screen and voice-guided cues, so you always know
+          when to squeeze, hold, and relax.
+        </p>
+
+        <div class="cta-row">
+          <!-- When the app is live on Play, change the label to "Get it on Google Play". -->
+          <a class="btn btn-primary" href="https://play.google.com/store/apps/details?id=com.kegelpulse.app">
+            Coming soon to Google Play
+          </a>
+          <a class="btn btn-ghost" href="#features">See what's inside</a>
+        </div>
+        <p class="cta-note">No subscriptions · No paywalls · No account</p>
+
+        <div class="trust">
+          <span><b class="tick">✓</b> Every feature free</span>
+          <span><b class="tick">✓</b> Works offline</span>
+          <span><b class="tick">✓</b> Data stays on your phone</span>
+        </div>
+      </div>
+
+      <div class="hero-shot">
+        <img src="assets/screenshots/02.png" alt="The Kegel Pulse session player showing the SQUEEZE phase with a breathing circle and rep counter" width="1080" height="1920">
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ FEATURES ============ -->
+  <section id="features">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Everything you need to build the habit</h2>
+        <p>One short session a day, structured so you train the full range — not just one move.</p>
+      </div>
+
+      <div class="cards">
+        <div class="card">
+          <div class="icon"><svg viewBox="0 0 24 24"><path d="M8 2v4M16 2v4M3 10h18"/><rect x="3" y="4" width="18" height="18" rx="2"/></svg></div>
+          <h3>A guided 30-day program</h3>
+          <p>Start where it makes sense for you and build gradually — steady holds, quick contractions, staged “elevator” holds, reverse-kegel releases, and diaphragmatic breathing.</p>
+        </div>
+
+        <div class="card">
+          <div class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+          <h3>Guided session player</h3>
+          <p>A calm breathing circle paces every rep through SQUEEZE, RELAX and REST, with a live rep and set counter. The screen stays awake so you're never interrupted mid-session.</p>
+        </div>
+
+        <div class="card">
+          <div class="icon"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 0 1 8-8"/><path d="M20 12a8 8 0 0 1-8 8"/><circle cx="12" cy="12" r="3"/></svg></div>
+          <h3>Visual, sound or vibration cues</h3>
+          <p>Pick whichever fits the moment. Voice-guided prompts keep your eyes off the screen when you'd rather not look.</p>
+        </div>
+
+        <div class="card">
+          <div class="icon"><svg viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></div>
+          <h3>Discreet mode</h3>
+          <p>A near-black, low-key screen lets you practise anywhere — a desk, a waiting room, a commute — without drawing attention.</p>
+        </div>
+
+        <div class="card">
+          <div class="icon"><svg viewBox="0 0 24 24"><path d="M3 17l5-5 4 4 8-8"/><path d="M15 8h5v5"/></svg></div>
+          <h3>Progress you can see</h3>
+          <p>A calendar heat-map, weekly chart, best streak, total sessions and minutes, plus a Pelvic Fitness Score and achievement badges.</p>
+        </div>
+
+        <div class="card">
+          <div class="icon"><svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg></div>
+          <h3>Reminders that you control</h3>
+          <p>Up to three daily reminders, set to your own times. Streak tracking keeps the momentum going — and none of it costs anything.</p>
+        </div>
+
+        <div class="card">
+          <div class="icon"><svg viewBox="0 0 24 24"><path d="M12 3l2.4 5.2 5.6.7-4.2 3.9 1.1 5.6L12 15.8 7.1 18.4l1.1-5.6L4 8.9l5.6-.7z"/></svg></div>
+          <h3>Bonus sessions — all free</h3>
+          <p>Relax &amp; Breathe, Office Break, Sleep Routine, Fast Twitch and Deep Session. No unlocks, no paywalls, nothing held back.</p>
+        </div>
+
+        <div class="card">
+          <div class="icon"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
+          <h3>Learn the basics</h3>
+          <p>Short, plain-language articles help you find the right muscles and understand good technique before you build the habit.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SCREENSHOTS ============ -->
+  <section id="screens" style="padding-bottom: 40px;">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>A look inside</h2>
+        <p>Calm, clinical and uncluttered — built to get out of your way.</p>
+      </div>
+    </div>
+    <div class="gallery-scroll">
+      <div class="gallery">
+        <img src="assets/screenshots/01.png" alt="Home screen showing today's session, the Pelvic Fitness Score and the 30-day program grid" width="1080" height="1920" loading="lazy">
+        <img src="assets/screenshots/02.png" alt="Session player in the SQUEEZE phase with a breathing circle and rep counter" width="1080" height="1920" loading="lazy">
+        <img src="assets/screenshots/03.png" alt="Session complete summary with streak, minutes, reps and sets" width="1080" height="1920" loading="lazy">
+        <img src="assets/screenshots/04.png" alt="Progress screen with current and best streak, training stats, badges and a calendar heat-map" width="1080" height="1920" loading="lazy">
+        <img src="assets/screenshots/05.png" alt="Home screen after finishing the full 30-day program" width="1080" height="1920" loading="lazy">
+        <img src="assets/screenshots/07.png" alt="Learn section listing plain-language articles on pelvic floor technique" width="1080" height="1920" loading="lazy">
+        <img src="assets/screenshots/08.png" alt="Settings screen with sound, vibration and voice-guide cue toggles" width="1080" height="1920" loading="lazy">
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PRIVACY ============ -->
+  <section id="privacy" class="band">
+    <div class="wrap">
+      <div>
+        <span class="eyebrow">Private by design</span>
+        <h2>Your pelvic health data never leaves your phone</h2>
+        <p style="color: var(--muted); margin: 0 0 18px;">
+          There is no account and no server. Your sessions, streaks, progress and
+          settings are stored only on your device — nothing about them is ever
+          uploaded, shared, or used to target ads.
+        </p>
+        <a class="btn btn-ghost" href="store/privacy-policy.html">Read the full privacy policy</a>
+      </div>
+      <div>
+        <ul>
+          <li><strong>No login, no email, no profile.</strong> The app never asks who you are.</li>
+          <li><strong>No cloud sync.</strong> There is no backend that could receive your practice data.</li>
+          <li><strong>Ad-supported, kept separate.</strong> Ads are served by Google AdMob and are never shown during a session or during setup. No pelvic health information is used to target them.</li>
+          <li><strong>Anonymous diagnostics only.</strong> Firebase collects usage counts and crash reports so the app keeps working — never the content of your sessions or assessment answers.</li>
+          <li><strong>Uninstall clears everything.</strong> Because it's all local, removing the app removes the data.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ WHO IT'S FOR / FINAL CTA ============ -->
+  <section class="final">
+    <div class="wrap">
+      <h2>Just 5 minutes a day</h2>
+      <p>
+        For anyone building pelvic floor strength and consistency as part of a general
+        fitness routine — including support for bladder control and postpartum recovery goals.
+      </p>
+      <div class="cta-row" style="justify-content: center;">
+        <a class="btn btn-primary" href="https://play.google.com/store/apps/details?id=com.kegelpulse.app">
+          Coming soon to Google Play
+        </a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-row">
+      <span>© 2026 Kegel Pulse</span>
+      <nav>
+        <a href="store/privacy-policy.html">Privacy Policy</a>
+        <a href="mailto:wasiqkhan336@gmail.com">Contact</a>
+        <a href="https://github.com/wasiqkxan/kegalpulse">Source</a>
+      </nav>
+    </div>
+    <p class="disclaimer">
+      Kegel Pulse is a general fitness and educational tool. It is not a medical device and does
+      not provide medical advice, diagnosis, or treatment. Consult a qualified healthcare
+      professional before beginning any exercise program, especially if you are pregnant,
+      postpartum, or have a pelvic health condition.
+    </p>
+  </div>
+</footer>
+
+</body>
+</html>
